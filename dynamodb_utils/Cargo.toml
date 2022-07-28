@@ -1,17 +1,12 @@
 [package]
-name = "api"
+name = "dynamodb_utils"
 version = "0.1.0"
 edition = "2021"
-
-[[bin]]
-name = "api"
-path = "src/main.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 axum = "0.5.13"
-dynamodb_utils = { path = "../dynamodb_utils" }
 serde = { version = "1.0.140", features = ["derive"] }
 serde_json = "1.0.82"
 tokio = { version = "1.20.1", features = ["full"] }

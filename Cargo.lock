@@ -16,6 +16,7 @@ name = "api"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "dynamodb_utils",
  "serde",
  "serde_json",
  "tokio",
@@ -102,6 +103,18 @@ name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
+
+[[package]]
+name = "dynamodb_utils"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
 
 [[package]]
 name = "fnv"
