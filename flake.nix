@@ -56,6 +56,16 @@
       packages = {
         api = rustPackage;
         default = packages.api;
+        api_image = pkgs.dockerTools.buildLayeredImage {
+          name = "api";
+          tag = "latest";
+          contents = [packages.api];
+          config = {
+            Cmd = ["${packages.api}/bin/api"];
+            WorkingDir = "/app";
+            ExposedPorts = {"3000/tcp" = {};};
+          };
+        };
       };
       devShells = {
         default = pkgs.mkShell rec {
