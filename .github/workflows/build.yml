@@ -1,0 +1,70 @@
+name: build axum-playground
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v15
+        with:
+          extra_nix_config: |
+            access-tokens = github=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup nix cache
+        uses: cachix/cachix-action@v10
+        with:
+          name: koloni-lockers
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      - name: Build image
+        run:
+          nix build .#api_image
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: package
+          path: result
+      
+    publish-api:
+      needs: [build-api]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download artifact
+          uses: actions/download-artifact@v2
+          id: download
+          with:
+            name: package
+
+        - name: Determine version
+          id: get_version
+          uses: battila7/get-version-action@v2
+
+        - name: Create release
+          uses: actions/create-release@v1
+          id: create_release
+          with:
+            draft: false
+            prerelease: false
+            release_name: ${{ steps.get_version.outputs.version }}
+            tag_name: ${{ github.ref }}
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
+
+        - name: Upload build to GitHub
+          uses: actions/upload-release-asset@v1
+          id: upload_build
+          env:
+            GITHUB_TOKEN: ${{ github.token }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: "${{ steps.download.outputs.download-path }}/result"
+            asset_name: api.tar.gz
+            asset_content_type: application/gzip
