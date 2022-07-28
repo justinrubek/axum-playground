@@ -33,38 +33,38 @@ jobs:
           name: package
           path: result
       
-    publish-api:
-      needs: [build-api]
-      runs-on: ubuntu-latest
-      steps:
-        - name: Download artifact
-          uses: actions/download-artifact@v2
-          id: download
-          with:
-            name: package
+  publish-api:
+    needs: [build-api]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        id: download
+        with:
+          name: package
 
-        - name: Determine version
-          id: get_version
-          uses: battila7/get-version-action@v2
+      - name: Determine version
+        id: get_version
+        uses: battila7/get-version-action@v2
 
-        - name: Create release
-          uses: actions/create-release@v1
-          id: create_release
-          with:
-            draft: false
-            prerelease: false
-            release_name: ${{ steps.get_version.outputs.version }}
-            tag_name: ${{ github.ref }}
-          env:
-            GITHUB_TOKEN: ${{ github.token }}
+      - name: Create release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.get_version.outputs.version }}
+          tag_name: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
-        - name: Upload build to GitHub
-          uses: actions/upload-release-asset@v1
-          id: upload_build
-          env:
-            GITHUB_TOKEN: ${{ github.token }}
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: "${{ steps.download.outputs.download-path }}/result"
-            asset_name: api.tar.gz
-            asset_content_type: application/gzip
+      - name: Upload build to GitHub
+        uses: actions/upload-release-asset@v1
+        id: upload_build
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: "${{ steps.download.outputs.download-path }}/result"
+          asset_name: api.tar.gz
+          asset_content_type: application/gzip
