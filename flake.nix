@@ -13,6 +13,10 @@
       url = "github:hercules-ci/gitignore.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    bomper = {
+      url = "github:justinrubek/bomper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -22,6 +26,7 @@
     gitignore,
     rust-overlay,
     pre-commit-hooks,
+    bomper,
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
@@ -52,6 +57,8 @@
         };
         nativeBuildInputs = [rust];
       };
+
+      bomper-cli = bomper.packages.${system}.cli;
     in rec {
       packages = {
         api = rustPackage;
@@ -69,7 +76,7 @@
       };
       devShells = {
         default = pkgs.mkShell rec {
-          buildInputs = with pkgs; [rust rustfmt];
+          buildInputs = with pkgs; [rust rustfmt cocogitto bomper-cli];
           inherit (pre-commit-check) shellHook;
         };
       };

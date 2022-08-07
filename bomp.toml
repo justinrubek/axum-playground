@@ -1,0 +1,10 @@
+[file."api/Cargo.toml"]
+search_value = "api"
+
+[file."dynamodb_utils/Cargo.toml"]
+search_value = "dynamodb_utils"
+
+[file."Cargo.lock"]
+search_value = "api|dynamodb_utils"
+
+[file."flake.nix"]
