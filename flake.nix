@@ -48,7 +48,7 @@
       rust = pkgs.rust-bin.stable.latest.default;
       rustPackage = pkgs.rustPlatform.buildRustPackage {
         pname = "api";
-        version = "0.1.0";
+        version = "0.1.1";
 
         buildAndTestSubdir = "api";
         src = gitignoreSource ./.;
